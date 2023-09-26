@@ -42,6 +42,9 @@ if ! flyctl status --app "$app"; then
   fi
   flyctl deploy --app "$app" --region "$region" --image "$image" --region "$region" --strategy immediate
 elif [ "$INPUT_UPDATE" != "false" ]; then
+  if [ -n "$INPUT_SECRETS" ]; then
+    echo $INPUT_SECRETS | tr " " "\n" | flyctl secrets import --app "$app"
+  fi
   flyctl deploy --config "$config" --app "$app" --region "$region" --image "$image" --region "$region" --strategy immediate
 fi
 
