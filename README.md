@@ -18,7 +18,7 @@ If you have an existing `fly.toml` in your repo, this action will copy it with a
 | `path`     | Path to run the `flyctl` commands from. Useful if you have an existing `fly.toml` in a subdirectory.                                                                                                     |
 | `postgres` | Optional name of an existing Postgres cluster to `flyctl postgres attach` to.                                                                                                                            |
 | `update`   | Whether or not to update this Fly app when the PR is updated. Default `true`.                                                                                                                            |
-| `secrets`  | Secrets to be set on the app. Separate multiple secrets with a space, i.e., `FIRST_SECRET=${{ secrets.FIRST_SECRET }} SECOND_SECRET=${{ secrets.SECOND_SECRET }}`                                        |
+| `secrets`  | Secrets to be set on the app. Separate multiple secrets with a newline                                                                                                                                   |
 | `vm`       | Set app VM to a named size, eg. shared-cpu-1x, dedicated-cpu-1x, dedicated-cpu-2x etc. (defaults to shared-cpu-1x)                                                                                       |
 | `memory`   | Set app VM memory (defaults to 256 megabytes)                                                                                                                                                            |
 | `count`    | Set app VM count to the given value (defaults to 1)                                                                                                                                                      |
@@ -59,7 +59,11 @@ jobs:
 
       - name: Deploy
         id: deploy
-        uses: superfly/fly-pr-review-apps@1.0.0
+        uses: p-j/fly-pr-review-apps@main
+        with:
+          secrets: |
+            FIRST_SECRET=${{ secrets.FIRST_SECRET }}
+            SECOND_SECRET=${{ secrets.SECOND_SECRET }}
 ```
 
 ## Cleaning up GitHub environments
@@ -87,7 +91,7 @@ jobs:
 
       - name: Deploy app
         id: deploy
-        uses: superfly/fly-pr-review-apps@1.0.0
+        uses: p-j/fly-pr-review-apps@main
 
       - name: Clean up GitHub environment
         uses: strumwolf/delete-deployment-environment@v2
@@ -111,7 +115,7 @@ steps:
 
   - name: Deploy app
     id: deploy
-    uses: superfly/fly-pr-review-apps@1.0.0
+    uses: p-j/fly-pr-review-apps@main
     with:
       postgres: myapp-postgres-staging-apps
 ```
@@ -127,7 +131,7 @@ steps:
   - uses: actions/checkout@v2
 
   - name: Deploy redis
-    uses: superfly/fly-pr-review-apps@1.0.0
+    uses: p-j/fly-pr-review-apps@main
     with:
       update: false # Don't need to re-deploy redis when the PR is updated
       path: redis # Keep fly.toml in a subdirectory to avoid confusing flyctl
@@ -136,7 +140,7 @@ steps:
 
   - name: Deploy app
     id: deploy
-    uses: superfly/fly-pr-review-apps@1.0.0
+    uses: p-j/fly-pr-review-apps@main
     with:
       name: pr-${{ github.event.number }}-myapp-app
 ```

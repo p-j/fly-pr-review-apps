@@ -47,9 +47,9 @@ if ! flyctl status --app "$app"; then
 fi
 
 # Set secrets if specified.
-  if [ -n "$INPUT_SECRETS" ]; then
-    echo $INPUT_SECRETS | tr " " "\n" | flyctl secrets import --app "$app"
-  fi
+if [ -n "$INPUT_SECRETS" ]; then
+  echo $INPUT_SECRETS | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | flyctl secrets import --app "$app"
+fi
 
 # Scale the VM before the deploy.
 if [ -n "$INPUT_VM" ]; then
