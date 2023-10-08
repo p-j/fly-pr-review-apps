@@ -21,7 +21,8 @@ app="${INPUT_NAME:-pr-$PR_NUMBER-$REPO_NAME}"
 region="${INPUT_REGION:-${FLY_REGION:-iad}}"
 org="${INPUT_ORG:-${FLY_ORG:-personal}}"
 image="$INPUT_IMAGE"
-config="$INPUT_CONFIG"
+config="${INPUT_CONFIG:-fly.toml}"
+created=0
 
 if ! echo "$app" | grep "$PR_NUMBER"; then
   echo "For safety, this action requires the app's name to contain the PR number."
@@ -36,21 +37,41 @@ fi
 
 # Deploy the Fly app, creating it first if needed.
 if ! flyctl status --app "$app"; then
+  # Backup config
+  cp "$config" "$config.bak"
+  # Create the Fly app.
   flyctl launch --no-deploy --copy-config --name "$app" --image "$image" --region "$region" --org "$org"
+  # Restore config
+  cp "$config.bak" "$config"
+  created=1
+fi
+
+# Set secrets if specified.
   if [ -n "$INPUT_SECRETS" ]; then
     echo $INPUT_SECRETS | tr " " "\n" | flyctl secrets import --app "$app"
   fi
-  flyctl deploy --app "$app" --region "$region" --image "$image" --region "$region" --strategy immediate
-elif [ "$INPUT_UPDATE" != "false" ]; then
-  if [ -n "$INPUT_SECRETS" ]; then
-    echo $INPUT_SECRETS | tr " " "\n" | flyctl secrets import --app "$app"
-  fi
-  flyctl deploy --config "$config" --app "$app" --region "$region" --image "$image" --region "$region" --strategy immediate
+
+# Scale the VM before the deploy.
+if [ -n "$INPUT_VM" ]; then
+  flyctl scale --app "$app" vm "$INPUT_VM"
+fi
+if [ -n "$INPUT_MEMORY" ]; then
+  flyctl scale --app "$app" memory "$INPUT_MEMORY"
+fi
+if [ -n "$INPUT_COUNT" ]; then
+  flyctl scale --app "$app" count "$INPUT_COUNT"
 fi
 
 # Attach postgres cluster to the app if specified.
 if [ -n "$INPUT_POSTGRES" ]; then
   flyctl postgres attach --postgres-app "$INPUT_POSTGRES" || true
+fi
+
+# Deploy or update the Fly app.
+if [ "$INPUT_UPDATE" != "false" ]; then
+  flyctl deploy --config "$config" --app "$app" --region "$region" --image "$image" --strategy immediate
+elif [ "$created" -eq 1 ]; then
+  flyctl deploy --config "$config" --app "$app" --region "$region" --image "$image" --strategy immediate
 fi
 
 # Make some info available to the GitHub workflow.
