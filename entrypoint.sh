@@ -40,7 +40,7 @@ if ! flyctl status --app "$app"; then
   # Backup config
   cp "$config" "$config.bak"
   # Create the Fly app.
-  flyctl launch --no-deploy --copy-config --name "$app" --image "$image" --region "$region" --org "$org"
+  flyctl launch --yes --no-deploy --copy-config --name "$app" --image "$image" --region "$region" --org "$org"
   # Restore config
   cp "$config.bak" "$config"
   created=1
@@ -69,9 +69,9 @@ fi
 
 # Deploy or update the Fly app.
 if [ "$INPUT_UPDATE" != "false" ]; then
-  flyctl deploy --config "$config" --app "$app" --region "$region" --image "$image" --strategy immediate
+  flyctl deploy --yes --config "$config" --app "$app" --region "$region" --image "$image" --strategy immediate
 elif [ "$created" -eq 1 ]; then
-  flyctl deploy --config "$config" --app "$app" --region "$region" --image "$image" --strategy immediate
+  flyctl deploy --yes --config "$config" --app "$app" --region "$region" --image "$image" --strategy immediate
 fi
 
 # Make some info available to the GitHub workflow.
