@@ -55,13 +55,13 @@ fi
 
 # Scale the VM before the deploy.
 if [ -n "$INPUT_VM" ]; then
-  flyctl scale --yes --app "$app" vm "$INPUT_VM"
+  flyctl scale --app "$app" vm "$INPUT_VM"
 fi
 if [ -n "$INPUT_MEMORY" ]; then
-  flyctl scale --yes --app "$app" memory "$INPUT_MEMORY"
+  flyctl scale --app "$app" memory "$INPUT_MEMORY"
 fi
 if [ -n "$INPUT_COUNT" ]; then
-  flyctl scale --yes --app "$app" count "$INPUT_COUNT"
+  flyctl scale --app "$app" count "$INPUT_COUNT"
 fi
 
 # Attach postgres cluster to the app if specified.
