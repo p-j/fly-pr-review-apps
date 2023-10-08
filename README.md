@@ -18,7 +18,7 @@ If you have an existing `fly.toml` in your repo, this action will copy it with a
 | `path`     | Path to run the `flyctl` commands from. Useful if you have an existing `fly.toml` in a subdirectory.                                                                                                     |
 | `postgres` | Optional name of an existing Postgres cluster to `flyctl postgres attach` to.                                                                                                                            |
 | `update`   | Whether or not to update this Fly app when the PR is updated. Default `true`.                                                                                                                            |
-| `secrets`  | Secrets to be set on the app. Separate multiple secrets with a newline                                                                                                                                   |
+| `secrets`  | Secrets to be set on the app. Separate multiple secrets with a space. eg: `FIRST_SECRET=${{ secrets.FIRST_SECRET }} SECOND_SECRET=${{ secrets.SECOND_SECRET }}`                                                                                                                                   |
 | `vm`       | Set app VM to a named size, eg. shared-cpu-1x, dedicated-cpu-1x, dedicated-cpu-2x etc. (defaults to shared-cpu-1x)                                                                                       |
 | `memory`   | Set app VM memory (defaults to 256 megabytes)                                                                                                                                                            |
 | `count`    | Set app VM count to the given value (defaults to 1)                                                                                                                                                      |
@@ -61,9 +61,7 @@ jobs:
         id: deploy
         uses: p-j/fly-pr-review-apps@main
         with:
-          secrets: |
-            FIRST_SECRET=${{ secrets.FIRST_SECRET }}
-            SECOND_SECRET=${{ secrets.SECOND_SECRET }}
+          secrets: FIRST_SECRET=${{ secrets.FIRST_SECRET }} SECOND_SECRET=${{ secrets.SECOND_SECRET }}
 ```
 
 ## Cleaning up GitHub environments
