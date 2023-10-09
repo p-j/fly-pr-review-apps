@@ -53,17 +53,6 @@ if [ -n "$INPUT_SECRETS" ]; then
   echo $INPUT_SECRETS | tr " " "\n" | flyctl secrets import --app "$app"
 fi
 
-# Scale the VM before the deploy.
-if [ -n "$INPUT_VM" ]; then
-  flyctl scale --app "$app" vm "$INPUT_VM"
-fi
-if [ -n "$INPUT_MEMORY" ]; then
-  flyctl scale --app "$app" memory "$INPUT_MEMORY"
-fi
-if [ -n "$INPUT_COUNT" ]; then
-  flyctl scale --app "$app" count "$INPUT_COUNT"
-fi
-
 # Attach postgres cluster to the app if specified.
 if [ -n "$INPUT_POSTGRES" ]; then
   flyctl postgres attach --postgres-app "$INPUT_POSTGRES" || true
@@ -74,6 +63,17 @@ if [ "$INPUT_UPDATE" != "false" ]; then
   flyctl deploy --yes --config "$config" --app "$app" --region "$region" --image "$image" --strategy immediate
 elif [ "$created" -eq 1 ]; then
   flyctl deploy --yes --config "$config" --app "$app" --region "$region" --image "$image" --strategy immediate
+fi
+
+# Scale the VM
+if [ -n "$INPUT_VM" ]; then
+  flyctl scale --app "$app" vm "$INPUT_VM"
+fi
+if [ -n "$INPUT_MEMORY" ]; then
+  flyctl scale --app "$app" memory "$INPUT_MEMORY"
+fi
+if [ -n "$INPUT_COUNT" ]; then
+  flyctl scale --app "$app" count "$INPUT_COUNT"
 fi
 
 # Make some info available to the GitHub workflow.
