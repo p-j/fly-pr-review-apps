@@ -42,7 +42,7 @@ if ! flyctl status --app "$app"; then
   # Backup config
   cp "$config" "$config.bak"
   # Create the Fly app.
-  flyctl launch --yes --no-deploy --copy-config --name "$app" --image "$image" --region "$region" --org "$org"
+  flyctl launch --yes --no-deploy --copy-config --name "$app" --image "$image" --region "$region" --org "$org" --config "$config"
   # Restore config
   cp "$config.bak" "$config"
   created=1
