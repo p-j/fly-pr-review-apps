@@ -65,16 +65,16 @@ elif [ "$created" -eq 1 ]; then
   flyctl deploy --yes --config "$config" --app "$app" --region "$region" --image "$image" --strategy immediate
 fi
 
-# Scale the VM
-if [ -n "$INPUT_VM" ]; then
-  flyctl scale --app "$app" vm "$INPUT_VM"
-fi
-if [ -n "$INPUT_MEMORY" ]; then
-  flyctl scale --app "$app" memory "$INPUT_MEMORY"
-fi
-if [ -n "$INPUT_COUNT" ]; then
-  flyctl scale --app "$app" count "$INPUT_COUNT"
-fi
+# # Scale the VM
+# if [ -n "$INPUT_VM" ]; then
+#   flyctl scale --app "$app" vm "$INPUT_VM"
+# fi
+# if [ -n "$INPUT_MEMORY" ]; then
+#   flyctl scale --app "$app" memory "$INPUT_MEMORY"
+# fi
+# if [ -n "$INPUT_COUNT" ]; then
+#   flyctl scale --app "$app" count "$INPUT_COUNT"
+# fi
 
 # Make some info available to the GitHub workflow.
 fly status --app "$app" --json >status.json
