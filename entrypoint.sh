@@ -39,12 +39,17 @@ fi
 
 # Deploy the Fly app, creating it first if needed.
 if ! flyctl status --app "$app"; then
-  # Backup config
-  cp "$config" "$config.bak"
+  if [ "$config" != "fly.toml" ]; then
+    if [ -f "fly.toml" ]; then
+      cp fly.toml fly.toml.bak
+      cp "$config" fly.toml
+    fi
+  fi
   # Create the Fly app.
-  flyctl launch --yes --no-deploy --copy-config --name "$app" --image "$image" --region "$region" --org "$org" --config "$config"
-  # Restore config
-  cp "$config.bak" "$config"
+  flyctl launch --yes --no-deploy --copy-config --name "$app" --image "$image" --region "$region" --org "$org"
+  if [ -f "fly.toml.bak" ]; then
+    mv fly.toml.bak fly.toml
+  fi
   created=1
 fi
 
