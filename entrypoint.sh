@@ -24,6 +24,8 @@ region="${INPUT_REGION:-${FLY_REGION:-iad}}"
 org="${INPUT_ORG:-${FLY_ORG:-personal}}"
 image="$INPUT_IMAGE"
 config="${INPUT_CONFIG:-fly.toml}"
+dockerfile="$INPUT_DOCKERFILE"
+ignorefile="$INPUT_IGNOREFILE"
 created=0
 
 if ! echo "$app" | grep "$PR_NUMBER"; then
@@ -65,9 +67,9 @@ fi
 
 # Deploy or update the Fly app.
 if [ "$INPUT_UPDATE" != "false" ]; then
-  flyctl deploy --yes --config "$config" --app "$app" --regions "$region" --image "$image" --strategy immediate
+  flyctl deploy --yes --config "$config" --dockerfile="$dockerfile" --ignorefile="$ignorefile" --app "$app" --regions "$region" --image "$image" --strategy immediate
 elif [ "$created" -eq 1 ]; then
-  flyctl deploy --yes --config "$config" --app "$app" --regions "$region" --image "$image" --strategy immediate
+  flyctl deploy --yes --config "$config" --dockerfile="$dockerfile" --ignorefile="$ignorefile" --app "$app" --regions "$region" --image "$image" --strategy immediate
 fi
 
 # # Scale the VM

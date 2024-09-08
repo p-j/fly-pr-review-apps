@@ -10,16 +10,20 @@ runs:
 inputs:
   name:
     description: Fly app name
-  image:
-    description: Optional pre-existing Docker image to use
+  path:
+    description: the path from which commands are run
   config:
     description: Optional path to a custom Fly toml config. Config path should be relative to `path` parameter, if specified.
+  dockerfile:
+    description: Optional path to a custom Dockerfile
+  ignorefile:
+    description: Optional path to a custom .dockerignore
+  image:
+    description: Optional pre-existing Docker image to use
   region:
     description: Region to launch the app in (alternatively, set the env FLY_REGION)
   org:
     description: Organization to launch the app in (alternatively, set the env FLY_ORG)
-  path:
-    description: path to a directory containing a fly.toml to clone
   postgres:
     description: Optionally attach the app to a pre-existing Postgres cluster on Fly
   update:
