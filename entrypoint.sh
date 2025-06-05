@@ -26,6 +26,8 @@ image="$INPUT_IMAGE"
 config="${INPUT_CONFIG:-fly.toml}"
 dockerfile="$INPUT_DOCKERFILE"
 ignorefile="$INPUT_IGNOREFILE"
+postgres_username="${INPUT_PGUSERNAME:-$app}"
+postgres_database="${INPUT_PGDBNAME:-$app}"
 created=0
 
 if ! echo "$app" | grep "$PR_NUMBER"; then
@@ -62,7 +64,7 @@ fi
 
 # Attach postgres cluster to the app if specified.
 if [ -n "$INPUT_POSTGRES" ]; then
-  flyctl postgres attach "$INPUT_POSTGRES" --app "$app" || true
+  flyctl postgres attach --yes "$INPUT_POSTGRES" --app "$app" --database-name "$postgres_database" --database-user "$postgres_username" || true
 fi
 
 # Deploy or update the Fly app.

@@ -26,6 +26,10 @@ inputs:
     description: Organization to launch the app in (alternatively, set the env FLY_ORG)
   postgres:
     description: Optionally attach the app to a pre-existing Postgres cluster on Fly
+  pgusername:
+    description: Optionally set the username for the Postgres cluster
+  pgdbname:
+    description: Optionally set the database for the Postgres cluster
   update:
     description: Whether new commits to the PR should re-deploy the Fly app
     default: "true"
