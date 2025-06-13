@@ -67,11 +67,19 @@ if [ -n "$INPUT_POSTGRES" ]; then
   flyctl postgres attach --yes "$INPUT_POSTGRES" --app "$app" --database-name "$postgres_database" --database-user "$postgres_username" || true
 fi
 
+# Build args handling
+build_args=""
+if [ -n "$INPUT_DOCKERBUILDARGS" ]; then
+  for arg in $INPUT_DOCKERBUILDARGS; do
+    build_args="$build_args --build-arg $arg"
+  done
+fi
+
 # Deploy or update the Fly app.
 if [ "$INPUT_UPDATE" != "false" ]; then
-  flyctl deploy --yes --config "$config" --dockerfile="$dockerfile" --ignorefile="$ignorefile" --app "$app" --regions "$region" --image "$image" --strategy immediate
+  flyctl deploy --yes --config "$config" --dockerfile="$dockerfile" --ignorefile="$ignorefile" --app "$app" --regions "$region" --image "$image" --strategy immediate $build_args
 elif [ "$created" -eq 1 ]; then
-  flyctl deploy --yes --config "$config" --dockerfile="$dockerfile" --ignorefile="$ignorefile" --app "$app" --regions "$region" --image "$image" --strategy immediate
+  flyctl deploy --yes --config "$config" --dockerfile="$dockerfile" --ignorefile="$ignorefile" --app "$app" --regions "$region" --image "$image" --strategy immediate $build_args
 fi
 
 # # Scale the VM

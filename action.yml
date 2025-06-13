@@ -16,6 +16,8 @@ inputs:
     description: Optional path to a custom Fly toml config. Config path should be relative to `path` parameter, if specified.
   dockerfile:
     description: Optional path to a custom Dockerfile
+  dockerbuildargs:
+    description: Optional Docker build arguments to pass to the deploy command
   ignorefile:
     description: Optional path to a custom .dockerignore
   image:
