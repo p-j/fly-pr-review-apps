@@ -9,17 +9,12 @@ if [ -n "$INPUT_PATH" ]; then
   cd "$INPUT_PATH" || exit
 fi
 
-PR_NUMBER=$(jq -r .number /github/workflow/event.json)
-if [ -z "$PR_NUMBER" ]; then
-  echo "This action only supports pull_request actions."
-  exit 1
-fi
-
 REPO_NAME=$(echo $GITHUB_REPOSITORY | tr "/" "-" | tr "[:upper:]" "[:lower:]" | tr "[:punct:]" "-")
 EVENT_TYPE=$(jq -r .action /github/workflow/event.json)
 
 # Default the Fly app name to pr-{number}-{repo_name}
-app="${INPUT_NAME:-pr-$PR_NUMBER-$REPO_NAME}"
+pr_number="${INPUT_PRNUMBER:-$(jq -r .number /github/workflow/event.json)}"
+app="${INPUT_NAME:-pr-$pr_number-$REPO_NAME}"
 region="${INPUT_REGION:-${FLY_REGION:-iad}}"
 org="${INPUT_ORG:-${FLY_ORG:-personal}}"
 image="$INPUT_IMAGE"
@@ -30,7 +25,7 @@ postgres_username="${INPUT_PGUSERNAME:-$app}"
 postgres_database="${INPUT_PGDBNAME:-$app}"
 created=0
 
-if ! echo "$app" | grep "$PR_NUMBER"; then
+if ! echo "$app" | grep "$pr_number"; then
   echo "For safety, this action requires the app's name to contain the PR number."
   exit 1
 fi

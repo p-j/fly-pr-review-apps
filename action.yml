@@ -10,6 +10,8 @@ runs:
 inputs:
   name:
     description: Fly app name
+  prnumber:
+    description: PR number to deploy. If not provided, it will be inferred from the GitHub context.
   path:
     description: the path from which commands are run
   config:
