@@ -53,8 +53,10 @@ if ! flyctl status --app "$app"; then
 fi
 
 # Set secrets if specified.
+# Quote the blob and --stage so space-containing values (FlyV1 macaroons)
+# stay one line and import does not deploy machines. flyctl deploy below applies them.
 if [ -n "$INPUT_SECRETS" ]; then
-  echo $INPUT_SECRETS | tr " " "\n" | flyctl secrets import --app "$app"
+  printf '%s\n' "$INPUT_SECRETS" | flyctl secrets import --stage --app "$app"
 fi
 
 # Attach postgres cluster to the app if specified.
