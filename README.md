@@ -22,6 +22,7 @@ If you have an existing `fly.toml` in your repo, this action will copy it with a
 | `vm`       | Set app VM to a named size, eg. shared-cpu-1x, dedicated-cpu-1x, dedicated-cpu-2x etc. (defaults to shared-cpu-1x)                                                                                       |
 | `memory`   | Set app VM memory (defaults to 256 megabytes)                                                                                                                                                            |
 | `count`    | Set app VM count to the given value (defaults to 1)                                                                                                                                                      |
+| `deploy_options` | Additional options passed to `flyctl deploy` (e.g. `--depot-scope=app`). Secrets still import with quoted `printf` and `--stage` before deploy. |
 
 ## Required Secrets
 
