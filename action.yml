@@ -39,6 +39,8 @@ inputs:
     default: "true"
   secrets:
     description: Secrets to be set on the app.
+  deploy_options:
+    description: Additional options to pass to flyctl deploy (e.g. --depot-scope=app)
   vm:
     description: Set app VM to a named size, eg. shared-cpu-1x, dedicated-cpu-1x, dedicated-cpu-2x etc. (defaults to shared-cpu-1x)
   memory:

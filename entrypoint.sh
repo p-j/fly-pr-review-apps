@@ -73,10 +73,11 @@ if [ -n "$INPUT_DOCKERBUILDARGS" ]; then
 fi
 
 # Deploy or update the Fly app.
+# INPUT_DEPLOY_OPTIONS is extra flyctl deploy flags (e.g. --depot-scope=app).
 if [ "$INPUT_UPDATE" != "false" ]; then
-  flyctl deploy --yes --config "$config" --dockerfile="$dockerfile" --ignorefile="$ignorefile" --app "$app" --regions "$region" --image "$image" --strategy immediate $build_args
+  flyctl deploy --yes --config "$config" --dockerfile="$dockerfile" --ignorefile="$ignorefile" --app "$app" --regions "$region" --image "$image" --strategy immediate $build_args $INPUT_DEPLOY_OPTIONS
 elif [ "$created" -eq 1 ]; then
-  flyctl deploy --yes --config "$config" --dockerfile="$dockerfile" --ignorefile="$ignorefile" --app "$app" --regions "$region" --image "$image" --strategy immediate $build_args
+  flyctl deploy --yes --config "$config" --dockerfile="$dockerfile" --ignorefile="$ignorefile" --app "$app" --regions "$region" --image "$image" --strategy immediate $build_args $INPUT_DEPLOY_OPTIONS
 fi
 
 # # Scale the VM
